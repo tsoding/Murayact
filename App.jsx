@@ -5,5 +5,5 @@ exports.App = () => {
     const clickMe = () => {
         setCount(count + 1);
     }
-    return <button onClick={clickMe}>Click me! ({count})</button>;
+    return <button onClick={clickMe}>This is in fact React! ({count})</button>;
 };

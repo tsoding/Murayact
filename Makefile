@@ -1,3 +1,9 @@
+CFLAGS=\
+	-ggdb\
+	-Wall\
+	-Wextra\
+	-fPIC\
+
 CXXFLAGS=\
 	-std=c++23\
 	-I$(HOME)/opt/raylib-5.5_linux_amd64/include\
@@ -20,5 +26,8 @@ bundle.js: browser.js App.js
 %.js: %.jsx
 	./node_modules/.bin/babel $< --presets @babel/preset-react -o $@
 
-raylib.node: raylib.cpp
-	g++ $(CXXFLAGS) -o raylib.node raylib.cpp $(LIBS)
+raylib.node: raylib.cpp microui.o
+	g++ $(CXXFLAGS) -o raylib.node raylib.cpp microui.o $(LIBS)
+
+microui.o: microui.c
+	cc $(CFLAGS) -c microui.c

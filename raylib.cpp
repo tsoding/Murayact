@@ -1,8 +1,79 @@
 #include <print>
 #include <node.h>
 #include <raylib.h>
+extern "C" {
+    #include "microui.h"
+}
+
+#define FONT_SIZE 20
+
+static mu_Context ctx = {0};
+static mu_Rect unclipped_rect = { 0, 0, 0x1000000, 0x1000000 };
 
 // TODO: research how to make it importable as ES6 module
+
+void MuButton(const v8::FunctionCallbackInfo<v8::Value> &args) {
+    auto isolate = args.GetIsolate();
+    auto context = isolate->GetCurrentContext();
+    bool result = mu_button(&ctx, *v8::String::Utf8Value(isolate, args[0]->ToString(context).ToLocalChecked()));
+    args.GetReturnValue().Set(v8::Boolean::New(isolate, result));
+}
+
+void MuBeginWindow(const v8::FunctionCallbackInfo<v8::Value> &args) {
+    mu_begin_window(&ctx, "Murayact", mu_rect(20, 20, 300, 300));
+    mu_layout_row(&ctx, 2, (int[]) { 300, -1 }, 50);
+}
+
+void MuEndWindow(const v8::FunctionCallbackInfo<v8::Value> &args) {
+    mu_end_window(&ctx);
+}
+
+void MuUpdateInput(const v8::FunctionCallbackInfo<v8::Value> &args) {
+    int x = GetMouseX();
+    int y = GetMouseY();
+    mu_input_mousemove(&ctx, x, y);
+    for (int button = MOUSE_BUTTON_LEFT; button <= MOUSE_BUTTON_MIDDLE; ++button) {
+        if (IsMouseButtonPressed (button)) mu_input_mousedown(&ctx, x, y, 1 << button);
+        if (IsMouseButtonReleased(button)) mu_input_mouseup  (&ctx, x, y, 1 << button);
+    }
+}
+
+void MuBegin(const v8::FunctionCallbackInfo<v8::Value> &args) {
+    mu_begin(&ctx);
+}
+
+void MuEnd(const v8::FunctionCallbackInfo<v8::Value> &args) {
+    mu_end(&ctx);
+
+    mu_Command *cmd = NULL;
+    while (mu_next_command(&ctx, &cmd)) {
+        switch (cmd->type) {
+        case MU_COMMAND_JUMP: printf("MU_COMMAND_JUMP\n"); break;
+        case MU_COMMAND_CLIP: {
+            int posX   = cmd->clip.rect.x;
+            int posY   = cmd->clip.rect.y;
+            int width  = cmd->clip.rect.w;
+            int height = cmd->clip.rect.h;
+            if (memcmp(&cmd->clip.rect, &unclipped_rect, sizeof(unclipped_rect)) == 0) {
+                EndScissorMode();
+            } else {
+                BeginScissorMode(posX, posY, width, height);
+            }
+        } break;
+        case MU_COMMAND_RECT: {
+            int posX   = cmd->rect.rect.x;
+            int posY   = cmd->rect.rect.y;
+            int width  = cmd->rect.rect.w;
+            int height = cmd->rect.rect.h;
+            DrawRectangle(posX, posY, width, height, *(Color*)&cmd->rect.color);
+        } break;
+        case MU_COMMAND_TEXT: {
+            DrawText(cmd->text.str, cmd->text.pos.x, cmd->text.pos.y, FONT_SIZE, *(Color*)&cmd->text.color);
+        } break;
+        // case MU_COMMAND_ICON: printf("MU_COMMAND_ICON\n"); break;
+    }
+}
+}
 
 void InitWindowAdapter(const v8::FunctionCallbackInfo<v8::Value> &args) {
     auto isolate = args.GetIsolate();
@@ -53,13 +124,34 @@ void Hello(const v8::FunctionCallbackInfo<v8::Value> &args) {
     // args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, "world", v8::NewStringType::kNormal).ToLocalChecked());
 }
 
+int text_width(mu_Font font, const char *str, int len)
+{
+    int x = MeasureText(TextFormat("%.*s", len, str), FONT_SIZE);
+    return x;
+}
+
+int text_height(mu_Font font)
+{
+    return FONT_SIZE;
+}
+
 void Initialize(v8::Local<v8::Object> exports) {
+    mu_init(&ctx);
+    ctx.text_width = text_width;
+    ctx.text_height = text_height;
+
     NODE_SET_METHOD(exports, "hello", Hello);
     NODE_SET_METHOD(exports, "InitWindow", InitWindowAdapter);
     NODE_SET_METHOD(exports, "WindowShouldClose", WindowShouldCloseAdapter);
     NODE_SET_METHOD(exports, "BeginDrawing", BeginDrawingAdapter);
     NODE_SET_METHOD(exports, "EndDrawing", EndDrawingAdapter);
     NODE_SET_METHOD(exports, "ClearBackground", ClearBackgroundAdapter);
+    NODE_SET_METHOD(exports, "mu_update_input", MuUpdateInput);
+    NODE_SET_METHOD(exports, "mu_begin", MuBegin);
+    NODE_SET_METHOD(exports, "mu_end", MuEnd);
+    NODE_SET_METHOD(exports, "mu_begin_window", MuBeginWindow);
+    NODE_SET_METHOD(exports, "mu_end_window", MuEndWindow);
+    NODE_SET_METHOD(exports, "mu_button", MuButton);
 }
 
 NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize)
