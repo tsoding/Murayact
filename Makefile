@@ -18,7 +18,7 @@ LIBS=\
 	-L$(HOME)/opt/raylib-5.5_linux_amd64/lib\
 	-l:libraylib.a\
 
-all: bundle.js native.js raylib.node
+all: bundle.js native.js muray.node
 
 bundle.js: browser.js App.js
 	./node_modules/.bin/browserify browser.js -o bundle.js
@@ -26,8 +26,8 @@ bundle.js: browser.js App.js
 %.js: %.jsx
 	./node_modules/.bin/babel $< --presets @babel/preset-react -o $@
 
-raylib.node: raylib.cpp microui.o
-	g++ $(CXXFLAGS) -o raylib.node raylib.cpp microui.o $(LIBS)
+muray.node: muray.cpp microui.o
+	g++ $(CXXFLAGS) -o muray.node muray.cpp microui.o $(LIBS)
 
 microui.o: microui.c
 	cc $(CFLAGS) -c microui.c

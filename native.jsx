@@ -1,6 +1,6 @@
 const React = require('react');
 const Reconciler = require('react-reconciler');
-const raylib = require('./raylib.node');
+const muray = require('./muray.node');
 const { App } = require('./App.js');
 
 const TRACE = false;
@@ -142,18 +142,18 @@ function renderTextElement(element) {
 function renderElement(element) {
     switch (element.type) {
     case 'window':
-        raylib.mu_begin_window();
+        muray.mu_begin_window();
         for (let child of element.children) {
             renderElement(child);
         }
-        raylib.mu_end_window();
+        muray.mu_end_window();
         break;
     case 'button':
         let label = "";
         for (let child of element.children) {
             label += renderTextElement(child);
         }
-        if (raylib.mu_button(label)) {
+        if (muray.mu_button(label)) {
             element.onClick();
         }
         break;
@@ -162,17 +162,17 @@ function renderElement(element) {
     }
 }
 
-raylib.InitWindow(800, 600, "Hello from JavaScript");
-while (!raylib.WindowShouldClose()) {
-    raylib.mu_update_input();
-    raylib.BeginDrawing();
+muray.InitWindow(800, 600, "Hello from JavaScript");
+while (!muray.WindowShouldClose()) {
+    muray.mu_update_input();
+    muray.BeginDrawing();
     {
-        raylib.ClearBackground(0xFF181818);
-        raylib.mu_begin();
+        muray.ClearBackground(0xFF181818);
+        muray.mu_begin();
         {
             renderElement(container.containerInfo);
         }
-        raylib.mu_end();
+        muray.mu_end();
     }
-    raylib.EndDrawing();
+    muray.EndDrawing();
 }

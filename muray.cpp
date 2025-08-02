@@ -1,3 +1,4 @@
+// Node.js plugin that integrates together Raylib (https://www.raylib.com/) and MicroUI (https://github.com/rxi/microui)
 #include <print>
 #include <node.h>
 #include <raylib.h>
