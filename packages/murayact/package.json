@@ -1,0 +1,25 @@
+{
+  "name": "murayact",
+  "version": "0.0.1",
+  "description": "MicroUI + Raylib React Renderer",
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-reconciler": "^0.28.0",
+    "muray": "^0.0.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tsoding/Murayact.git",
+    "directory": "packages/muray"
+  },
+  "author": "Alexey Kutepov <reximkut@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tsoding/Murayact/issues"
+  },
+  "homepage": "https://github.com/tsoding/Murayact#readme"
+}

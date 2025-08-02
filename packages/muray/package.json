@@ -1,0 +1,22 @@
+{
+  "name": "muray",
+  "version": "0.0.1",
+  "description": "Node.js plugin that integrates together Raylib and MicroUI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tsoding/Murayact.git",
+    "directory": "packages/muray"
+  },
+  "author": "Alexey Kutepov <reximkut@gmail.com>",
+  "license": "MIT",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/tsoding/Murayact/issues"
+  },
+  "homepage": "https://github.com/tsoding/Murayact#readme"
+}

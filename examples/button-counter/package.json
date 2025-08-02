@@ -1,0 +1,24 @@
+{
+  "name": "button-counter",
+  "version": "0.0.1",
+  "description": "Simple example that works with both react-dom and murayact",
+  "devDependencies": {
+    "@babel/cli": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "browserify": "^17.0.1",
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "murayact": "^0.0.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "babel App.jsx -o App.js && babel browser.jsx -o browser.js&& babel native.jsx -o native.js && browserify browser.js -o bundle.js",
+    "serve": "http-server"
+  },
+  "author": "Alexey Kutepov <reximkut@gmail.com>",
+  "license": "MIT"
+}

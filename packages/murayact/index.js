@@ -1,7 +1,6 @@
 const React = require('react');
 const Reconciler = require('react-reconciler');
-const muray = require('./muray.node');
-const { App } = require('./App.js');
+const muray = require('muray');
 
 const TRACE = false;
 
@@ -118,19 +117,7 @@ const hostConfig = {
         }
     },
 };
-const RaylibRenderer = Reconciler(hostConfig);
-
-const container = RaylibRenderer.createContainer(
-    {type: 'window'},
-    0,
-    // null,
-    // false,
-    // null,
-    // 'react_raylib_',
-    // (_err) => undefined,
-    // null
-);
-RaylibRenderer.updateContainer(<App />, container);
+const MurayRenderer = Reconciler(hostConfig);
 
 function renderTextElement(element) {
     if (element.type === 'text') {
@@ -162,17 +149,31 @@ function renderElement(element) {
     }
 }
 
-muray.InitWindow(800, 600, "Hello from JavaScript");
-while (!muray.WindowShouldClose()) {
-    muray.mu_update_input();
-    muray.BeginDrawing();
-    {
-        muray.ClearBackground(0xFF181818);
-        muray.mu_begin();
+exports.render = (element) => {
+    const container = MurayRenderer.createContainer(
+        {type: 'window'},
+        0,
+        // null,
+        // false,
+        // null,
+        // 'react_raylib_',
+        // (_err) => undefined,
+        // null
+    );
+    MurayRenderer.updateContainer(element, container);
+
+    muray.InitWindow(800, 600, "Hello from JavaScript");
+    while (!muray.WindowShouldClose()) {
+        muray.mu_update_input();
+        muray.BeginDrawing();
         {
-            renderElement(container.containerInfo);
+            muray.ClearBackground(0xFF181818);
+            muray.mu_begin();
+            {
+                renderElement(container.containerInfo);
+            }
+            muray.mu_end();
         }
-        muray.mu_end();
+        muray.EndDrawing();
     }
-    muray.EndDrawing();
 }

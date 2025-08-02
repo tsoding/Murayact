@@ -1,4 +1,4 @@
-// Node.js plugin that integrates together Raylib (https://www.raylib.com/) and MicroUI (https://github.com/rxi/microui)
+// Node.js plugin that integrates together Raylib and MicroUI
 #include <print>
 #include <node.h>
 #include <raylib.h>
@@ -10,8 +10,6 @@ extern "C" {
 
 static mu_Context ctx = {0};
 static mu_Rect unclipped_rect = { 0, 0, 0x1000000, 0x1000000 };
-
-// TODO: research how to make it importable as ES6 module
 
 void MuButton(const v8::FunctionCallbackInfo<v8::Value> &args) {
     auto isolate = args.GetIsolate();
@@ -82,11 +80,9 @@ void InitWindowAdapter(const v8::FunctionCallbackInfo<v8::Value> &args) {
 
     int width = 0;
     if (args.Length() > 0) width = args[0]->Int32Value(context).FromJust();
-    std::println("width = {}", width);
 
     int height = 0;
     if (args.Length() > 1) height = args[1]->Int32Value(context).FromJust();
-    std::println("height = {}", height);
 
     const char *title = "Hardcoded Title";
     if (args.Length() > 2) {
@@ -116,15 +112,6 @@ void ClearBackgroundAdapter(const v8::FunctionCallbackInfo<v8::Value> &args) {
     ClearBackground(*(Color*)&color);
 }
 
-void Hello(const v8::FunctionCallbackInfo<v8::Value> &args) {
-    auto isolate = args.GetIsolate();
-    for (int i = 0; i < args.Length(); ++i) {
-        std::println("{}", *v8::String::Utf8Value(isolate, args[i]));
-    }
-
-    // args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, "world", v8::NewStringType::kNormal).ToLocalChecked());
-}
-
 int text_width(mu_Font font, const char *str, int len)
 {
     int x = MeasureText(TextFormat("%.*s", len, str), FONT_SIZE);
@@ -141,7 +128,6 @@ void Initialize(v8::Local<v8::Object> exports) {
     ctx.text_width = text_width;
     ctx.text_height = text_height;
 
-    NODE_SET_METHOD(exports, "hello", Hello);
     NODE_SET_METHOD(exports, "InitWindow", InitWindowAdapter);
     NODE_SET_METHOD(exports, "WindowShouldClose", WindowShouldCloseAdapter);
     NODE_SET_METHOD(exports, "BeginDrawing", BeginDrawingAdapter);

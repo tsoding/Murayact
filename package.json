@@ -2,19 +2,11 @@
   "name": "Murayact",
   "version": "0.0.1",
   "main": "index.js",
+  "workspaces": [ "packages/*", "examples/*" ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Alexey Kutepov <reximkut@gmail.com>",
   "license": "MIT",
-  "description": "MicroUI + Raylib React Renderer",
-  "dependencies": {
-    "@babel/cli": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
-    "browserify": "^17.0.1",
-    "http-server": "^14.1.1",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
-    "react-reconciler": "^0.28.0"
-  }
+  "description": "MicroUI + Raylib React Renderer"
 }
