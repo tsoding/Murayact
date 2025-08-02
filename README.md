@@ -1,6 +1,6 @@
 # Murayact
 
-MicroUI + Raylib React Renderer
+[MicroUI](https://github.com/rxi/microui) + [Raylib](https://www.raylib.com/n) React Renderer
 
 > [!WARNING]
 > This is not a ready to use library. Just a proof of concept. But feel free to drop an Issue or a PR
