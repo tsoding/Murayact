@@ -1,6 +1,6 @@
 # Murayact
 
-[MicroUI](https://github.com/rxi/microui) + [Raylib](https://www.raylib.com/n) React Renderer
+[MicroUI](https://github.com/rxi/microui) + [Raylib](https://www.raylib.com/) React Renderer
 
 > [!WARNING]
 > This is not a ready to use library. Just a proof of concept. But feel free to drop an Issue or a PR
@@ -17,6 +17,6 @@ $ node native.js
 
 ## Screencast
 
-This was developed on a livestream. You can watch a recording here:
+This was developed on a livestream. You can watch the recording here:
 
 [![thumbnail](./thumbnail.png)](https://www.youtube.com/watch?v=sk0VFcOeTAw)
