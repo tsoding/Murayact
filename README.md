@@ -14,3 +14,9 @@ $ cd ./examples/button-counter/
 $ npm install
 $ node native.js
 ```
+
+## Screencast
+
+This was developed on a livestream. You can watch a recording here:
+
+[![thumbnail](./thumbnail.png)](https://www.youtube.com/watch?v=sk0VFcOeTAw)
