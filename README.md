@@ -7,7 +7,7 @@
 
 ## Quick Start
 
-*Only Linux is supported right now, but feel free to add the rest of the platforms by contributing to [./packages/muray/](./packages/muray/).*
+*Windows is not supported yet, but feel free to add it by contributing to [./packages/muray/](./packages/muray/).*
 
 ```console
 $ cd ./examples/button-counter/
