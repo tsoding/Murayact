@@ -1,5 +1,7 @@
 // Node.js plugin that integrates together Raylib and MicroUI
+#ifdef __LINUX__
 #include <print>
+#endif
 #include <node.h>
 #include <raylib.h>
 extern "C" {
@@ -9,6 +11,7 @@ extern "C" {
 #define FONT_SIZE 20
 
 static mu_Context ctx = {0};
+static char input_buf[128];
 static mu_Rect unclipped_rect = { 0, 0, 0x1000000, 0x1000000 };
 
 void MuButton(const v8::FunctionCallbackInfo<v8::Value> &args) {
@@ -16,6 +19,24 @@ void MuButton(const v8::FunctionCallbackInfo<v8::Value> &args) {
     auto context = isolate->GetCurrentContext();
     bool result = mu_button(&ctx, *v8::String::Utf8Value(isolate, args[0]->ToString(context).ToLocalChecked()));
     args.GetReturnValue().Set(v8::Boolean::New(isolate, result));
+}
+
+void MuLabel(const v8::FunctionCallbackInfo<v8::Value> &args) {
+    auto isolate = args.GetIsolate();
+    auto context = isolate->GetCurrentContext();
+    auto label = *v8::String::Utf8Value(isolate, args[0]->ToString(context).ToLocalChecked());
+    mu_label(&ctx, *v8::String::Utf8Value(isolate, args[0]->ToString(context).ToLocalChecked()));
+}
+
+void MuInput(const v8::FunctionCallbackInfo<v8::Value> &args) {
+    auto isolate = args.GetIsolate();
+    auto context = isolate->GetCurrentContext();
+    int val = mu_textbox(&ctx, input_buf, sizeof(input_buf));
+    if (val & MU_RES_CHANGE)
+    {
+        mu_set_focus(&ctx, ctx.last_id);
+        args.GetReturnValue().Set(v8::String::NewFromUtf8(isolate, input_buf).ToLocalChecked());
+    }
 }
 
 void MuBeginWindow(const v8::FunctionCallbackInfo<v8::Value> &args) {
@@ -34,6 +55,15 @@ void MuUpdateInput(const v8::FunctionCallbackInfo<v8::Value> &args) {
     for (int button = MOUSE_BUTTON_LEFT; button <= MOUSE_BUTTON_MIDDLE; ++button) {
         if (IsMouseButtonPressed (button)) mu_input_mousedown(&ctx, x, y, 1 << button);
         if (IsMouseButtonReleased(button)) mu_input_mouseup  (&ctx, x, y, 1 << button);
+    }
+
+    char c;
+    char input[2];
+    if ((c = GetCharPressed()))
+    {
+        input[0] = c;
+        input[1] = '\0';
+        mu_input_text(&ctx, input);
     }
 }
 
@@ -139,6 +169,8 @@ void Initialize(v8::Local<v8::Object> exports) {
     NODE_SET_METHOD(exports, "mu_begin_window", MuBeginWindow);
     NODE_SET_METHOD(exports, "mu_end_window", MuEndWindow);
     NODE_SET_METHOD(exports, "mu_button", MuButton);
+    NODE_SET_METHOD(exports, "mu_label", MuLabel);
+    NODE_SET_METHOD(exports, "mu_input", MuInput);
 }
 
 NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize)
