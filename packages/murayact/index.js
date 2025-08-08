@@ -27,8 +27,9 @@ const hostConfig = {
     },
     shouldSetTextContent(type, props) {
         if (TRACE) console.log('shouldSetTextContent', type, props);
-        const childrenType = typeof props.children;
-        if (childrenType === 'string' || childrenType == 'number') return true;
+        // Documentation for shouldSetTextContent says you have to manage creating the text nodes in createInstance when this returns true.
+        // const childrenType = typeof props.children;
+        // if (childrenType === 'string' || childrenType == 'number') return true;
         return false;
     },
     createTextInstance(text, _rootContainerInstance, _hostContext) {
@@ -46,8 +47,7 @@ const hostConfig = {
     ) {
         if (TRACE) console.log("createInstance");
         const elementProps = { ...props };
-        delete elementProps.children;
-        const element = {type, ...elementProps, children: []};
+        const element = { type, ...elementProps, children: [] };
         if (type === 'Text') {
             throw 'TODO';
         }
@@ -109,7 +109,7 @@ const hostConfig = {
         oldProps,
         newProps,
     ) {
-        if (TRACE) console.log('commitUpdate', args);
+        if (TRACE) console.log('commitUpdate', instance, oldProps, newProps);
         for (let prop of updatePayload.props) {
             if (prop !== 'children') {
                 instance[prop] = newProps[prop];
@@ -128,30 +128,56 @@ function renderTextElement(element) {
 }
 function renderElement(element) {
     switch (element.type) {
-    case 'window':
-        muray.mu_begin_window();
-        for (let child of element.children) {
-            renderElement(child);
-        }
-        muray.mu_end_window();
-        break;
-    case 'button':
-        let label = "";
-        for (let child of element.children) {
-            label += renderTextElement(child);
-        }
-        if (muray.mu_button(label)) {
-            element.onClick();
-        }
-        break;
-    default:
-        throw 'TODO';
+        case 'window':
+            {
+                muray.mu_begin_window();
+                for (let child of element.children) {
+                    renderElement(child);
+                }
+                muray.mu_end_window();
+            } break;
+        case 'div':
+            {
+                for (let child of element.children) {
+                    renderElement(child);
+                }
+            } break;
+        case 'button':
+            {
+                let label = "";
+                for (let child of element.children) {
+                    label += renderTextElement(child);
+                }
+                if (muray.mu_button(label)) {
+                    element.onClick();
+                }
+            } break;
+        case 'label':
+            {
+                let label = "";
+                for (let child of element.children) {
+                    label += renderTextElement(child);
+                }
+                muray.mu_label(label);
+            } break;
+        case 'input':
+            {
+                let placeholder = element.placeholder || "";
+                muray.mu_label(placeholder);
+                let value = muray.mu_input();
+                if (value) {
+                    const evt = { target: { value } };
+                    element.onChange(evt);
+                }
+            } break;
+        default:
+            throw 'TODO';
     }
 }
 
 exports.render = (element) => {
     const container = MurayRenderer.createContainer(
-        {type: 'window'},
+        { type: 'window' },
         0,
         // null,
         // false,
