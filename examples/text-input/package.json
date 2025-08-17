@@ -19,6 +19,6 @@
     "install": "babel App.jsx -o App.js && babel browser.jsx -o browser.js && babel native.jsx -o native.js && browserify browser.js -o bundle.js",
     "serve": "http-server"
   },
-  "author": "Alexey Kutepov <reximkut@gmail.com>",
+  "author": "Andrew Solomon <andrewsolomon610@gmail.com>",
   "license": "MIT"
 }
