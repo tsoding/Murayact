@@ -41,7 +41,8 @@ void MuInput(const v8::FunctionCallbackInfo<v8::Value> &args) {
 
 void MuBeginWindow(const v8::FunctionCallbackInfo<v8::Value> &args) {
     mu_begin_window(&ctx, "Murayact", mu_rect(20, 20, 300, 300));
-    mu_layout_row(&ctx, 2, (int[]) { 300, -1 }, 50);
+    const int widths[] = { 300, -1 };
+    mu_layout_row(&ctx, 2, widths, 50);
 }
 
 void MuEndWindow(const v8::FunctionCallbackInfo<v8::Value> &args) {
