@@ -67,7 +67,8 @@ void MuUpdateInput(const v8::FunctionCallbackInfo<v8::Value> &args) {
         mu_input_text(&ctx, input);
     }
 
-    if (IsKeyPressed(KEY_BACKSPACE)) mu_input_keydown(&ctx, MU_KEY_BACKSPACE);
+    if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE)) mu_input_keydown(&ctx, MU_KEY_BACKSPACE);
+    if (IsKeyReleased(KEY_BACKSPACE)) mu_input_keyup(&ctx, MU_KEY_BACKSPACE);
 }
 
 void MuBegin(const v8::FunctionCallbackInfo<v8::Value> &args) {
