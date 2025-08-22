@@ -164,7 +164,8 @@ function renderElement(element) {
             {
                 let placeholder = element.placeholder || "";
                 muray.mu_label(placeholder);
-                let value = muray.mu_input();
+                if (element.id == undefined || element.id == "") throw "MISSING ID FOR TEXT INPUT";
+                let value = muray.mu_input(element.id);
                 if (value) {
                     const evt = { target: { value } };
                     element.onChange(evt);
