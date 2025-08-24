@@ -103,8 +103,8 @@ void MuLabel(const v8::FunctionCallbackInfo<v8::Value> &args) {
 void MuInput(const v8::FunctionCallbackInfo<v8::Value> &args) {
     auto isolate = args.GetIsolate();
     auto context = isolate->GetCurrentContext();
-    auto id = *v8::String::Utf8Value(isolate, args[0]->ToString(context).ToLocalChecked());
-    inputs.render(&ctx, id, args);
+    auto id = v8::String::Utf8Value(isolate, args[0]->ToString(context).ToLocalChecked());
+    inputs.render(&ctx, *id, args);
 }
 
 void MuBeginWindow(const v8::FunctionCallbackInfo<v8::Value> &args) {
