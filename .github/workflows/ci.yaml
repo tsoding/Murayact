@@ -19,7 +19,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22.x'
-      - name: Run example install
-        working-directory: examples/button-counter
+      - name: Run install
         run: |
-          npm install
+          for dir in examples/*/; do
+            echo "::group::Installing $(basename "$dir")"
+            cd "$dir"
+            npm install
+            cd - > /dev/null
+            echo "::endgroup::"
+          done
