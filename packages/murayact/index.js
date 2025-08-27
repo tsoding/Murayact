@@ -117,6 +117,11 @@ const hostConfig = {
         }
     },
 };
+const windowConfig = {
+    width: 800,
+    height: 600
+};
+
 const MurayRenderer = Reconciler(hostConfig);
 
 function renderTextElement(element) {
@@ -162,8 +167,8 @@ function renderElement(element) {
             } break;
         case 'input':
             {
-                let placeholder = element.placeholder || "";
-                muray.mu_label(placeholder);
+                // TODO: Add placeholder text into mu_textbox
+                // let placeholder = element.placeholder || "";
                 if (element.id == undefined || element.id == "") throw "MISSING ID FOR TEXT INPUT";
                 let value = muray.mu_input(element.id);
                 if (value) {
@@ -174,6 +179,12 @@ function renderElement(element) {
         default:
             throw 'TODO';
     }
+}
+
+exports.initWindow = (width, height) => {
+    windowConfig.width = width;
+    windowConfig.height = height;
+    // TODO: Add more window configurations from native.js
 }
 
 exports.render = (element) => {
@@ -189,7 +200,7 @@ exports.render = (element) => {
     );
     MurayRenderer.updateContainer(element, container);
 
-    muray.InitWindow(800, 600, "Hello from JavaScript");
+    muray.InitWindow(windowConfig.width, windowConfig.height, "Hello from JavaScript");
     while (!muray.WindowShouldClose()) {
         muray.mu_update_input();
         muray.BeginDrawing();
