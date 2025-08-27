@@ -7,8 +7,6 @@
 
 ## Quick Start
 
-*Windows is not supported yet, but feel free to add it by contributing to [./packages/muray/](./packages/muray/).*
-
 ```console
 $ cd ./examples/button-counter/
 $ npm install

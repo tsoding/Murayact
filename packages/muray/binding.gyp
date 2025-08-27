@@ -23,10 +23,17 @@
                         ]
                     },
                 }],
+				['OS=="win"', {
+                    'include_dirs': ['vendor/raylib-5.5_win64_msvc16/include'],
+					"msvs_settings": {
+						"VCLinkerTool": {
+							"AdditionalLibraryDirectories": [ "<(module_root_dir)/vendor/raylib-5.5_win64_msvc16/lib" ],
+                            "AdditionalDependencies": [ 'raylib.lib', 'winmm.lib' ],
+							'IgnoreDefaultLibraryNames': [ 'libcmt.lib' ]
+                        },
+					},
+                }],
             ],
         }
     ]
 }
-
-
-
